@@ -14,41 +14,40 @@ public class Main {
             texts[i] = generateText("abc", 3 + random.nextInt(3));
         }
 
-        new Thread(() -> {
+        Thread threadForLength3 = new Thread(() -> {
             for (String text : texts) {
                 if (isPalindrome(text)) {
-                    switch (text.length()) {
-                        case 3 -> counterForLength3.addAndGet(1);
-                        case 4 -> counterForLength4.addAndGet(1);
-                        case 5 -> counterForLength5.addAndGet(1);
-                    }
+                    addNickname(text.length());
                 }
             }
-        }).start();
+        });
+        threadForLength3.start();
 
-        new Thread(() -> {
+        Thread threadForLength4 = new Thread(() -> {
             for (String text : texts) {
                 if (isFromSingleLetter(text)) {
-                    switch (text.length()) {
-                        case 3 -> counterForLength3.addAndGet(1);
-                        case 4 -> counterForLength4.addAndGet(1);
-                        case 5 -> counterForLength5.addAndGet(1);
-                    }
+                   addNickname(text.length());
                 }
             }
-        }).start();
+        });
+        threadForLength4.start();
 
-        new Thread(() -> {
+        Thread threadForLength5 = new Thread(() -> {
             for (String text : texts) {
                 if (isAscendingOrder(text)) {
-                    switch (text.length()) {
-                        case 3 -> counterForLength3.addAndGet(1);
-                        case 4 -> counterForLength4.addAndGet(1);
-                        case 5 -> counterForLength5.addAndGet(1);
-                    }
+                    addNickname(text.length());
                 }
             }
-        }).start();
+        });
+        threadForLength5.start();
+
+        try {
+            threadForLength3.join();
+            threadForLength4.join();
+            threadForLength5.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         System.out.printf("Красивых слов с длиной 3: %d шт\n", counterForLength3.get());
         System.out.printf("Красивых слов с длиной 4: %d шт\n", counterForLength4.get());
@@ -90,5 +89,13 @@ public class Main {
             }
         }
         return true;
+    }
+
+    public static void addNickname(int length) {
+        switch (length) {
+            case 3 -> counterForLength3.addAndGet(1);
+            case 4 -> counterForLength4.addAndGet(1);
+            case 5 -> counterForLength5.addAndGet(1);
+        }
     }
 }
